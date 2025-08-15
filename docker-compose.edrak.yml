@@ -1,0 +1,49 @@
+#
+# Edrak Analytics - Optimized Docker Compose Configuration
+# Lightweight setup for production deployment
+#
+
+version: '3.8'
+
+services:
+  db:
+    env_file: docker/.env.edrak
+    image: postgres:15
+    container_name: edrak_analytics_db
+    restart: unless-stopped
+    volumes:
+      - db_home:/var/lib/postgresql/data
+      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: edrak_analytics
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: edrak_secure_password
+
+  superset:
+    env_file: docker/.env.edrak
+    build:
+      context: .
+      target: lean
+      args:
+        DEV_MODE: "false"
+        BUILD_TRANSLATIONS: "false"
+    container_name: edrak_analytics_app
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    depends_on:
+      - db
+    volumes:
+      - ./docker:/app/docker
+      - ./superset:/app/superset
+      - ./superset_config.py:/app/pythonpath/superset_config.py
+      - superset_home:/app/superset_home
+    environment:
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
+
+volumes:
+  superset_home:
+    external: false
+  db_home:
+    external: false
