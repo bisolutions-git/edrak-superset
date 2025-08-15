@@ -1,0 +1,73 @@
+#
+# Edrak Analytics - Development Docker Compose Configuration
+# Optimized for live development with hot reloading
+#
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: edrak_analytics_db_dev
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_home_dev:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: edrak_analytics
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: edrak_secure_password
+
+  superset:
+    build:
+      context: .
+      target: dev  # Use development target
+      args:
+        DEV_MODE: "true"
+        BUILD_TRANSLATIONS: "false"
+    container_name: edrak_analytics_app_dev
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    depends_on:
+      - db
+    volumes:
+      # Live mounting for development
+      - ./docker:/app/docker
+      - ./superset:/app/superset                           # Backend live changes
+      - ./superset-frontend:/app/superset-frontend         # Frontend source
+      - ./superset_config.py:/app/pythonpath/superset_config.py  # Config live changes
+      - superset_home_dev:/app/superset_home
+    environment:
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+      SUPERSET_ENV: development
+      DATABASE_DB: edrak_analytics
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: edrak_secure_password
+      DATABASE_USER: superset
+      DATABASE_PORT: 5432
+      DATABASE_DIALECT: postgresql
+      SECRET_KEY: 58bQh4VjsudDEIyICyNhA75+WGm793RD/B1jBRNO/FtATs329XR1CuiL
+    command: ["/app/docker/docker-bootstrap.sh", "app"]  # Development server
+
+  # Optional: Frontend development server (uncomment if needed)
+  # frontend:
+  #   build:
+  #     context: ./superset-frontend
+  #     dockerfile: ../docker/Dockerfile
+  #     target: superset-node-ci
+  #   container_name: edrak_analytics_frontend_dev
+  #   ports:
+  #     - "9000:9000"
+  #   volumes:
+  #     - ./superset-frontend:/app/superset-frontend
+  #   command: ["npm", "run", "dev-server"]
+
+volumes:
+  superset_home_dev:
+    external: false
+  db_home_dev:
+    external: false
