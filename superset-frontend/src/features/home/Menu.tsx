@@ -65,7 +65,7 @@ const StyledHeader = styled.header`
         flex-direction: column;
         justify-content: center;
         /* must be exactly the height of the Antd navbar */
-        min-height: 50px;
+        min-height: 60px;
         padding: ${theme.sizeUnit}px
           ${theme.sizeUnit * 2}px
           ${theme.sizeUnit}px
@@ -74,6 +74,7 @@ const StyledHeader = styled.header`
         img {
           height: 100%;
           object-fit: contain;
+          max-height: none;
         }
         &:focus {
           border-color: transparent;

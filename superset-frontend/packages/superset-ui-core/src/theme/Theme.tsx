@@ -70,19 +70,30 @@ export class Theme {
 
   private static readonly defaultTokens = {
     // Brand
-    brandLogoAlt: 'Apache Superset',
-    brandLogoUrl: '/static/assets/images/superset-logo-horiz.png',
-    brandLogoMargin: '18px',
+    brandLogoAlt: 'Edrak Analytics',
+    brandLogoUrl: '/static/assets/images/edrak/edrak-logo-horizon.png',
+    brandLogoMargin: '12px',
     brandLogoHref: '/',
-    brandLogoHeight: '24px',
+    brandLogoHeight: '30px',
 
     // Default colors
-    colorPrimary: '#2893B3', // NOTE: previous lighter primary color was #20a7c9
-    colorLink: '#2893B3',
-    colorError: '#e04355',
-    colorWarning: '#fcc700',
-    colorSuccess: '#5ac189',
-    colorInfo: '#66bcfe',
+    colorPrimary: '#051556',        // Main brand color - deep navy
+    colorLink: '#1622b7',           // Links - rich blue
+    colorError: '#e04355',          // Keep existing red for errors
+    colorWarning: '#fcc700',        // Keep existing yellow for warnings  
+    colorSuccess: '#1ed3b9',        // Success - teal from your palette
+    colorInfo: '#5e4ef9',           // Info - vibrant purple
+    
+    // Additional brand colors for UI elements
+    colorBgElevated: '#e6e4f2',     // Light lavender for elevated surfaces
+    colorBorder: '#d1aaf2',         // Soft lavender for borders
+    colorFillSecondary: '#9a9afc',  // Light purple for secondary fills
+    
+    // Text colors
+    colorText: '#051556',           // Main text color
+    colorTextSecondary: '#595959',  // Secondary text color
+    colorTextTertiary: '#8c8c8c',   // Tertiary text color
+    colorTextQuaternary: '#bfbfbf', // Quaternary text color
 
     // Forcing some default tokens
     fontFamily: `'Inter', Helvetica, Arial`,
@@ -90,7 +101,7 @@ export class Theme {
 
     // Extra tokens
     transitionTiming: 0.3,
-    brandIconMaxWidth: 37,
+    brandIconMaxWidth: 60,
     fontSizeXS: '8',
     fontSizeXXL: '28',
     fontWeightNormal: '400',
