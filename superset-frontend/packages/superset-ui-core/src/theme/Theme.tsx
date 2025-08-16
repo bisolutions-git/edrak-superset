@@ -43,7 +43,6 @@ import {
 } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { noop } from 'lodash';
-import { isThemeDark } from './utils/themeUtils';
 import { GlobalStyles } from './GlobalStyles';
 
 import {
@@ -68,6 +67,30 @@ import {
 export class Theme {
   theme: SupersetTheme;
 
+  // Light theme colors
+  private static readonly lightTokens = {
+    colorPrimary: '#051556',        // Main brand color - deep navy
+    colorLink: '#1622b7',           // Links - rich blue
+    colorSuccess: '#1ed3b9',        // Success - teal from your palette
+    colorInfo: '#5e4ef9',           // Info - vibrant purple
+    colorText: '#051556',           // Main text color - your brand navy
+    colorTextSecondary: '#1622b7',  // Secondary text - rich blue
+    colorBgElevated: '#e6e4f2',     // Light lavender for elevated surfaces
+    colorBorder: '#d1aaf2',         // Soft lavender for borders
+  };
+
+  // Dark theme colors
+  private static readonly darkTokens = {
+    colorPrimary: '#9a9afc',        // Light purple for dark theme
+    colorLink: '#9a9afc',           // Light purple for links in dark theme
+    colorSuccess: '#1ed3b9',        // Keep teal - works on dark
+    colorInfo: '#9a9afc',           // Light purple for info
+    colorText: '#e6e4f2',           // Light lavender text on dark
+    colorTextSecondary: '#d1aaf2',  // Soft lavender for secondary text
+    colorBgElevated: '#1622b7',     // Rich blue for elevated surfaces
+    colorBorder: '#5e4ef9',         // Vibrant purple for borders
+  };
+
   private static readonly defaultTokens = {
     // Brand
     brandLogoAlt: 'Edrak Analytics',
@@ -76,24 +99,9 @@ export class Theme {
     brandLogoHref: '/',
     brandLogoHeight: '30px',
 
-    // Default colors
-    colorPrimary: '#051556',        // Main brand color - deep navy
-    colorLink: '#1622b7',           // Links - rich blue
+    // Default colors (will be overridden by theme-specific tokens)
     colorError: '#e04355',          // Keep existing red for errors
-    colorWarning: '#fcc700',        // Keep existing yellow for warnings  
-    colorSuccess: '#1ed3b9',        // Success - teal from your palette
-    colorInfo: '#5e4ef9',           // Info - vibrant purple
-    
-    // Additional brand colors for UI elements
-    colorBgElevated: '#e6e4f2',     // Light lavender for elevated surfaces
-    colorBorder: '#d1aaf2',         // Soft lavender for borders
-    colorFillSecondary: '#9a9afc',  // Light purple for secondary fills
-    
-    // Text colors
-    colorText: '#051556',           // Main text color
-    colorTextSecondary: '#595959',  // Secondary text color
-    colorTextTertiary: '#8c8c8c',   // Tertiary text color
-    colorTextQuaternary: '#bfbfbf', // Quaternary text color
+    colorWarning: '#fcc700',        // Keep existing yellow for warnings
 
     // Forcing some default tokens
     fontFamily: `'Inter', Helvetica, Arial`,
@@ -110,6 +118,19 @@ export class Theme {
   };
 
   private antdConfig: AntdThemeConfig;
+
+  /**
+   * Check if a theme configuration uses dark algorithm
+   */
+  private isDarkTheme(config: AntdThemeConfig): boolean {
+    const { algorithm } = config;
+    
+    if (Array.isArray(algorithm)) {
+      return algorithm.includes(antdThemeImport.darkAlgorithm);
+    }
+    
+    return algorithm === antdThemeImport.darkAlgorithm;
+  }
 
   private constructor({ config }: { config?: AnyThemeConfig }) {
     this.SupersetThemeProvider = this.SupersetThemeProvider.bind(this);
@@ -162,9 +183,16 @@ export class Theme {
   setConfig(config: AnyThemeConfig): void {
     const antdConfig = normalizeThemeConfig(config);
 
+    // Determine if this is a dark theme
+    const isDark = this.isDarkTheme(antdConfig);
+    
+    // Apply theme-specific brand colors based on dark/light mode
+    const themeSpecificTokens = isDark ? Theme.darkTokens : Theme.lightTokens;
+
     // Apply default tokens to token property
     antdConfig.token = {
       ...Theme.defaultTokens,
+      ...themeSpecificTokens,
       ...(antdConfig.token || {}),
     };
 
@@ -175,6 +203,7 @@ export class Theme {
     this.antdConfig = antdConfig;
     this.theme = {
       ...Theme.defaultTokens,
+      ...themeSpecificTokens,
       ...antdConfig.token, // Passing through the extra, superset-specific tokens
       ...tokens,
       colors: {} as DeprecatedThemeColors, // Placeholder that will be filled in the second phase
@@ -183,7 +212,6 @@ export class Theme {
     // Second phase: Now that theme is initialized, we can determine if it's dark
     // and generate the legacy colors correctly
     const systemColors = getSystemColors(tokens);
-    const isDark = isThemeDark(this.theme); // Use utility function with theme
     this.theme.colors = getDeprecatedColors(systemColors, isDark);
 
     // Update the providers with the fully formed theme
