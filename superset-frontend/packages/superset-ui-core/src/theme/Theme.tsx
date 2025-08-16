@@ -69,14 +69,15 @@ export class Theme {
 
   // Light theme colors
   private static readonly lightTokens = {
-    colorPrimary: '#051556',        // Main brand color - deep navy
-    colorLink: '#1622b7',           // Links - rich blue
+    colorPrimary: '#2893B3',        // Main brand color - deep navy
+    colorLink: '#2893B3',           // Links - rich blue
     colorSuccess: '#1ed3b9',        // Success - teal from your palette
     colorInfo: '#5e4ef9',           // Info - vibrant purple
     colorText: '#051556',           // Main text color - your brand navy
-    colorTextSecondary: '#1622b7',  // Secondary text - rich blue
-    colorBgElevated: '#e6e4f2',     // Light lavender for elevated surfaces
-    colorBorder: '#d1aaf2',         // Soft lavender for borders
+    colorTextSecondary: '#595959',  // Secondary text - rich blue
+    // colorBgElevated: '#e6e4f2',     // Light lavender for elevated surfaces
+    // colorBorder: '#d1aaf2',         // Soft lavender for borders
+    brandLogoUrl: '/static/assets/images/edrak/edrak-logo-horizon.png',
   };
 
   // Dark theme colors
@@ -87,14 +88,14 @@ export class Theme {
     colorInfo: '#9a9afc',           // Light purple for info
     colorText: '#e6e4f2',           // Light lavender text on dark
     colorTextSecondary: '#d1aaf2',  // Soft lavender for secondary text
-    colorBgElevated: '#1622b7',     // Rich blue for elevated surfaces
-    colorBorder: '#5e4ef9',         // Vibrant purple for borders
+    // colorBgElevated: '#1622b7',     // Rich blue for elevated surfaces
+    // colorBorder: '#5e4ef9',         // Vibrant purple for borders
+    brandLogoUrl: '/static/assets/images/edrak/white-edrak-logo-horizon.png',
   };
 
   private static readonly defaultTokens = {
     // Brand
     brandLogoAlt: 'Edrak Analytics',
-    brandLogoUrl: '/static/assets/images/edrak/edrak-logo-horizon.png',
     brandLogoMargin: '12px',
     brandLogoHref: '/',
     brandLogoHeight: '30px',
