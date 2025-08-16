@@ -182,6 +182,8 @@ docker-compose -f docker-compose.edrak.yml ps
    # Update these values for production:
    DATABASE_PASSWORD=your_secure_password_here
    SECRET_KEY=your_secret_key_here
+   DATABASE_DB=edrak_analytics
+   DATABASE_USER=superset
    ```
 
 ### Step 3: Production Deployment on Ubuntu
@@ -248,13 +250,20 @@ Edit `docker/.env.edrak` to customize:
 ```bash
 # Database Configuration
 DATABASE_DB=edrak_analytics
+DATABASE_HOST=db
 DATABASE_PASSWORD=your_secure_password
+DATABASE_USER=superset
+DATABASE_PORT=5432
+DATABASE_DIALECT=postgresql
 
 # Security
 SECRET_KEY=your_generated_secret_key
 
 # Superset Configuration
 SUPERSET_LOAD_EXAMPLES=no  # Set to 'yes' for demo data
+SUPERSET_ENV=production
+FLASK_ENV=production
+SUPERSET_PORT=8088
 ```
 
 ### Custom Branding
@@ -284,7 +293,7 @@ LOGO_TOOLTIP = "Edrak Analytics - Business Intelligence Platform"
 2. **Database Connection Issues**:
    ```bash
    # Check database container
-   docker logs edrak_analytics_db
+   docker compose -f docker-compose.edrak.yml logs db
    
    # Restart database
    docker compose -f docker-compose.edrak.yml restart db
@@ -341,10 +350,10 @@ docker compose -f docker-compose.edrak.yml logs -f
 
 ```bash
 # Create database backup
-docker exec edrak_analytics_db pg_dump -U superset edrak_analytics > backup_$(date +%Y%m%d).sql
+docker compose -f docker-compose.edrak.yml exec db pg_dump -U superset edrak_analytics > backup_$(date +%Y%m%d).sql
 
 # Restore from backup
-docker exec -i edrak_analytics_db psql -U superset edrak_analytics < backup_20250815.sql
+docker compose -f docker-compose.edrak.yml exec -T db psql -U superset edrak_analytics < backup_20250815.sql
 ```
 
 ### System Monitoring
