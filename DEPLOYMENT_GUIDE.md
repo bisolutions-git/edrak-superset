@@ -315,6 +315,11 @@ docker compose -f docker-compose.edrak.yml logs db
 
 # Follow logs in real-time
 docker compose -f docker-compose.edrak.yml logs -f
+
+# Follow specific service logs in real-time
+docker compose -f docker-compose.edrak.yml logs -f superset
+docker compose -f docker-compose.edrak.yml logs -f db
+docker compose -f docker-compose.edrak.yml logs -f nginx
 ```
 
 ---
