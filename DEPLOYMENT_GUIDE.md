@@ -202,41 +202,33 @@ docker-compose -f docker-compose.edrak.yml ps
 
 2. **Configure Firewall**:
    ```bash
-   # Allow port 8088 through firewall
-   sudo ufw allow 8088/tcp
+   # Allow HTTP and HTTPS through firewall
+   sudo ufw allow 80/tcp
+   sudo ufw allow 443/tcp
    sudo ufw reload
    ```
 
-3. **Set up Reverse Proxy (Optional)**:
+3. **Configure Domain Access**:
+   
+   **DNS Setup:**
    ```bash
-   # Install Nginx
-   sudo apt install -y nginx
-
-   # Create Nginx configuration
-   sudo nano /etc/nginx/sites-available/edrak-analytics
+   # Point your domain to your server IP
+   # demo.edrakanalytics.com → YOUR_SERVER_IP
    ```
 
-   Add this configuration:
-   ```nginx
-   server {
-       listen 80;
-       server_name your-domain.com;  # Replace with your domain
-
-       location / {
-           proxy_pass http://localhost:8088;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
-       }
-   }
-   ```
-
-   Enable the site:
+   **SSL Certificate Setup (Let's Encrypt):**
    ```bash
-   sudo ln -s /etc/nginx/sites-available/edrak-analytics /etc/nginx/sites-enabled/
-   sudo nginx -t
-   sudo systemctl reload nginx
+   # Install certbot (no nginx needed - we use Docker)
+   sudo apt install -y certbot
+
+   # Get SSL certificate using standalone mode
+   sudo certbot certonly --standalone -d demo.edrakanalytics.com
+
+   # Create SSL directory and copy certificates
+   mkdir -p docker/ssl
+   sudo cp /etc/letsencrypt/live/demo.edrakanalytics.com/fullchain.pem docker/ssl/demo.edrakanalytics.com.crt
+   sudo cp /etc/letsencrypt/live/demo.edrakanalytics.com/privkey.pem docker/ssl/demo.edrakanalytics.com.key
+   sudo chown -R $USER:$USER docker/ssl
    ```
 
 ---
@@ -327,6 +319,39 @@ docker compose -f docker-compose.edrak.yml logs -f
 
 ---
 
+## 🔐 SSL Certificate Management
+
+### SSL Certificate Renewal
+
+Your SSL certificates need renewal every 90 days. Use your existing renewal script:
+
+```bash
+# Run your Let's Encrypt renewal script
+./your-renewal-script.sh
+
+# Copy renewed certificates to Docker directory
+sudo cp /etc/letsencrypt/live/demo.edrakanalytics.com/fullchain.pem docker/ssl/demo.edrakanalytics.com.crt
+sudo cp /etc/letsencrypt/live/demo.edrakanalytics.com/privkey.pem docker/ssl/demo.edrakanalytics.com.key
+sudo chown -R $USER:$USER docker/ssl
+
+# Restart nginx container to load new certificates
+docker compose -f docker-compose.edrak.yml restart nginx
+```
+
+### Automated Renewal (Recommended)
+
+Set up a cron job for automatic renewal:
+
+```bash
+# Edit crontab
+crontab -e
+
+# Add this line to run renewal script monthly
+0 2 1 * * /path/to/your-renewal-script.sh && docker compose -f /path/to/edrak-superset/docker-compose.edrak.yml restart nginx
+```
+
+---
+
 ## 🔄 Maintenance
 
 ### Updating Edrak Analytics
@@ -375,8 +400,8 @@ docker system prune -a
 
 - **Development**: http://localhost:8088
 - **Production (local)**: http://localhost:8088
-- **Production (server)**: http://your-server-ip:8088
-- **With Nginx**: http://your-domain.com
+- **Production (server)**: https://demo.edrakanalytics.com
+- **HTTP (redirects to HTTPS)**: http://demo.edrakanalytics.com
 
 ---
 
