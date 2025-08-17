@@ -15,7 +15,7 @@ services:
     environment:
       POSTGRES_DB: edrak_analytics
       POSTGRES_USER: superset
-      POSTGRES_PASSWORD: Edrak@Superset2025
+      POSTGRES_PASSWORD: Edrak_Superset2025
 
   nginx:
     image: nginx:alpine
