@@ -225,11 +225,11 @@ RUN --mount=type=cache,target=${SUPERSET_HOME}/.cache/uv \
 RUN --mount=type=cache,target=${SUPERSET_HOME}/.cache/uv \
     uv pip install -e .
 
-# Copy static assets from the frontend build stage
-COPY --from=superset-node /app/superset/static/assets superset/static/assets
-
 # Copy superset source code
 COPY superset superset
+
+# Copy static assets from the frontend build stage
+COPY --from=superset-node /app/superset/static/assets superset/static/assets
 # Remove .po files to reduce image size
 RUN rm -f superset/translations/*/*/*.po
 
