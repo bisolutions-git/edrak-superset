@@ -95,15 +95,6 @@ SMTP_MAIL_FROM = 'superset@superset.com'
 WEBDRIVER_BASEURL = "http://superset:8088/"
 WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 
-# Custom branding (for your styling customization)
-APP_NAME = "Edrak Analytics"
-APP_ICON = "/static/assets/images/edrak-logo.png"
-APP_ICON_WIDTH = 150
-
-# Additional branding configuration
-LOGO_TARGET_PATH = None
-LOGO_TOOLTIP = "Edrak Analytics - Business Intelligence Platform"
-LOGO_RIGHT_TEXT = ""
 
 # Security configuration
 TALISMAN_ENABLED = True
@@ -122,6 +113,13 @@ TALISMAN_CONFIG = {
         "object-src": "'none'",
     }
 }
+
+# Authentication / Public access
+# Explicitly enable the Public role for anonymous users and copy permissions
+# from a baseline built-in role to ensure unauthenticated access to static assets
+# and other public endpoints as needed.
+AUTH_ROLE_PUBLIC = 'Public'
+PUBLIC_ROLE_LIKE = 'Gamma'
 
 # Custom CSS for your styling needs
 CUSTOM_CSS = """
