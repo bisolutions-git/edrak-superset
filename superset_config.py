@@ -39,15 +39,15 @@ WTF_CSRF_TIME_LIMIT = None
 # Set this API key to enable Mapbox visualizations
 MAPBOX_API_KEY = os.environ.get('MAPBOX_API_KEY', '')
 
-# Cache configuration
+# Cache configuration - Redis cache for production
 CACHE_CONFIG = {
     'CACHE_TYPE': 'RedisCache',
     'CACHE_DEFAULT_TIMEOUT': 300,
     'CACHE_KEY_PREFIX': 'superset_',
-    'CACHE_REDIS_HOST': 'localhost',
+    'CACHE_REDIS_HOST': 'edrak_redis',
     'CACHE_REDIS_PORT': 6379,
     'CACHE_REDIS_DB': 1,
-    'CACHE_REDIS_URL': 'redis://localhost:6379/1'
+    'CACHE_REDIS_URL': 'redis://edrak_redis:6379/1'
 }
 
 # Async query configuration
@@ -55,9 +55,9 @@ RESULTS_BACKEND = CACHE_CONFIG
 
 # Celery configuration for async queries
 class CeleryConfig:
-    broker_url = 'redis://localhost:6379/0'
+    broker_url = 'redis://edrak_redis:6379/0'
     imports = ('superset.sql_lab', )
-    result_backend = 'redis://localhost:6379/0'
+    result_backend = 'redis://edrak_redis:6379/0'
     worker_prefetch_multiplier = 10
     task_acks_late = True
 

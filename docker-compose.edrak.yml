@@ -17,6 +17,14 @@ services:
       POSTGRES_USER: superset
       POSTGRES_PASSWORD: Edrak_Superset2025
 
+  redis:
+    image: redis:7-alpine
+    container_name: edrak_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
   nginx:
     image: nginx:alpine
     container_name: edrak_nginx
@@ -59,4 +67,6 @@ volumes:
   superset_home:
     external: false
   db_home:
+    external: false
+  redis_data:
     external: false
