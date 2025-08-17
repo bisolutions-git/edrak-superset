@@ -72,7 +72,7 @@ docker-compose -f docker-compose.dev.yml up -d
 docker-compose -f docker-compose.dev.yml ps
 
 # View logs
-docker-compose -f docker-compose.dev.yml logs -f superset
+docker-compose -f docker-compose.dev.yml logs -f edrak_app
 ```
 
 #### Option B: Production Mode
@@ -200,7 +200,24 @@ docker-compose -f docker-compose.edrak.yml ps
    docker compose -f docker-compose.edrak.yml logs -f
    ```
 
-2. **Configure Firewall**:
+2. **Initialize Database and Create Admin User**:
+   ```bash
+   # Initialize database schema
+   docker compose -f docker-compose.edrak.yml exec edrak_app superset db upgrade
+
+   # Create admin user
+   docker compose -f docker-compose.edrak.yml exec edrak_app superset fab create-admin \
+       --username admin \
+       --firstname Admin \
+       --lastname User \
+       --email admin@edrakanalytics.com \
+       --password admin
+
+   # Initialize Superset
+   docker compose -f docker-compose.edrak.yml exec edrak_app superset init
+   ```
+
+3. **Configure Firewall**:
    ```bash
    # Allow HTTP and HTTPS through firewall
    sudo ufw allow 80/tcp
@@ -208,7 +225,7 @@ docker-compose -f docker-compose.edrak.yml ps
    sudo ufw reload
    ```
 
-3. **Configure Domain Access**:
+4. **Configure Domain Access**:
    
    **DNS Setup:**
    ```bash
@@ -294,7 +311,7 @@ LOGO_TOOLTIP = "Edrak Analytics - Business Intelligence Platform"
 3. **Frontend Build Issues**:
    ```bash
    # Rebuild with no cache
-   docker compose -f docker-compose.edrak.yml build --no-cache superset
+   docker compose -f docker-compose.edrak.yml build --no-cache edrak_app
    ```
 
 4. **Permission Issues (Ubuntu)**:
@@ -310,14 +327,14 @@ LOGO_TOOLTIP = "Edrak Analytics - Business Intelligence Platform"
 docker compose -f docker-compose.edrak.yml logs
 
 # View specific service logs
-docker compose -f docker-compose.edrak.yml logs superset
+docker compose -f docker-compose.edrak.yml logs edrak_app
 docker compose -f docker-compose.edrak.yml logs db
 
 # Follow logs in real-time
 docker compose -f docker-compose.edrak.yml logs -f
 
 # Follow specific service logs in real-time
-docker compose -f docker-compose.edrak.yml logs -f superset
+docker compose -f docker-compose.edrak.yml logs -f edrak_app
 docker compose -f docker-compose.edrak.yml logs -f db
 docker compose -f docker-compose.edrak.yml logs -f nginx
 ```
