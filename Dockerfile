@@ -224,6 +224,19 @@ RUN --mount=type=cache,target=${SUPERSET_HOME}/.cache/uv \
 # Install the superset package
 RUN --mount=type=cache,target=${SUPERSET_HOME}/.cache/uv \
     uv pip install -e .
+
+# Copy static assets from the frontend build stage
+COPY --from=superset-node /app/superset/static/assets superset/static/assets
+
+# Copy superset source code
+COPY superset superset
+# Remove .po files to reduce image size
+RUN rm -f superset/translations/*/*/*.po
+
+# Copy compiled translations
+COPY --from=superset-node /app/superset/translations superset/translations
+COPY --from=python-translation-compiler /app/translations_mo superset/translations
+
 RUN python -m compileall /app/superset
 
 USER superset
