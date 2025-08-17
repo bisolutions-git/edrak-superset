@@ -110,6 +110,8 @@ TALISMAN_ENABLED = True
 TALISMAN_CONFIG = {
     "content_security_policy": {
         "default-src": ["'self'"],
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
         "img-src": ["'self'", "data:", "https:"],
         "worker-src": ["'self'", "blob:"],
         "connect-src": [
