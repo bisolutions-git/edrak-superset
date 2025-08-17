@@ -7,7 +7,7 @@ services:
   db:
     env_file: docker/.env.edrak
     image: postgres:15
-    container_name: edrak_analytics_db
+    container_name: edrak_db
     restart: unless-stopped
     volumes:
       - db_home:/var/lib/postgresql/data
@@ -19,7 +19,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: edrak_analytics_nginx
+    container_name: edrak_nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -40,7 +40,7 @@ services:
       args:
         DEV_MODE: "false"
         BUILD_TRANSLATIONS: "false"
-    container_name: edrak_analytics_app
+    container_name: edrak_app
     restart: unless-stopped
     expose:
       - "8088"
