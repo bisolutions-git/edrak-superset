@@ -229,7 +229,7 @@ RUN --mount=type=cache,target=${SUPERSET_HOME}/.cache/uv \
 COPY superset superset
 
 # Copy static assets from the frontend build stage
-COPY --from=superset-node /app/superset/static/assets superset/static/assets
+COPY --from=superset-node /app/superset/static/assets /app/superset/static/assets
 # Remove .po files to reduce image size
 RUN rm -f superset/translations/*/*/*.po
 
