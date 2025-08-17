@@ -30,9 +30,9 @@ services:
       - ./docker/ssl:/etc/ssl/certs:ro
       - ./docker/ssl:/etc/ssl/private:ro
     depends_on:
-      - superset
+      - edrak_app
 
-  superset:
+  edrak_app:
     env_file: docker/.env.edrak
     build:
       context: .

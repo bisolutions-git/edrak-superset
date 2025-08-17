@@ -26,9 +26,9 @@ ROW_LIMIT = 5000
 SECRET_KEY = '58bQh4VjsudDEIyICyNhA75+WGm793RD/B1jBRNO/FtATs329XR1CuiL'
 
 # The SQLAlchemy connection string to your database backend
-# PostgreSQL configuration
+# PostgreSQL configuration - Docker container connection
 SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-    'postgresql://etl@localhost:5432/edrak-superset'
+    'postgresql://superset:Edrak@Superset2025@edrak_db:5432/edrak_analytics'
 
 # Flask-WTF flag for CSRF
 WTF_CSRF_ENABLED = True
