@@ -55,8 +55,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./docker:/app/docker
-      - ./superset:/app/superset
+      # Do not mount source code or docker folder in production; it overwrites built assets
       - ./superset_config.py:/app/pythonpath/superset_config.py
       - superset_home:/app/superset_home
     environment:
