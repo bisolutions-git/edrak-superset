@@ -107,7 +107,7 @@ const mockedProps = {
         name: 'Home',
         icon: '',
         label: 'Home',
-        url: '/superset/welcome',
+        url: '/edrak/welcome',
         index: 1,
       },
       {
@@ -169,7 +169,7 @@ const mockedProps = {
       },
     ],
     brand: {
-      path: '/superset/welcome/',
+      path: '/edrak/welcome/',
       icon: '/static/assets/images/superset-logo-horiz.png',
       alt: 'Apache Superset',
       width: '126',

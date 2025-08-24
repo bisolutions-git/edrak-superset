@@ -356,7 +356,7 @@ class Superset(BaseSupersetView):
         the form_data param with a form_data_key by saving the original content
         to the cache layer.
         """
-        redirect_url = request.url.replace("/superset/explore", "/explore")
+        redirect_url = request.url.replace("/edrak/explore", "/explore")
         form_data_key = None
         if request_form_data := request.args.get("form_data"):
             parsed_form_data = loads_request_json(request_form_data)

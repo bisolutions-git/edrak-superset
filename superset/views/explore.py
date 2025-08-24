@@ -37,7 +37,7 @@ class ExploreView(BaseSupersetView):
 
 
 class ExplorePermalinkView(BaseSupersetView):
-    route_base = "/superset"
+    route_base = "/edrak"
     class_permission_name = "Explore"
 
     @expose("/explore/p/<key>/")
