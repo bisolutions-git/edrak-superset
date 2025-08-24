@@ -855,7 +855,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
 class SupersetIndexView(IndexView):
     @expose("/")
     def index(self) -> FlaskResponse:
-        return redirect(url_for("Superset.welcome"))
+        return redirect("/edrak/welcome/")
 
     @expose("/lang/<string:locale>")
     @safe
